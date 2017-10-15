@@ -43,7 +43,7 @@ public class HttpServer {
             while (true) {
                 try {
                     Socket request = server.accept();
-                    Runnable r = new RequestProcessor(serverInfo);
+                    Runnable r = new RequestProcessor(serverInfo, request);
                     pool.submit(r);
                 } catch (IOException ex) {
                     logger.error("Error accepting connection", ex);

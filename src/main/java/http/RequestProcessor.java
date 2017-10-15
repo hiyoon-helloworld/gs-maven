@@ -17,7 +17,7 @@ public class RequestProcessor implements Runnable {
     private Socket connection;
     private ServerInfo serverInfo;
 
-    public RequestProcessor(ServerInfo serverInfo) {
+    public RequestProcessor(ServerInfo serverInfo, Socket connection) {
 //        if (rootDirectory.isFile()) {
 //            throw new IllegalArgumentException(
 //                    "rootDirectory must be a directory, not a file");
@@ -43,7 +43,11 @@ public class RequestProcessor implements Runnable {
     @Override
     public void run() {
         // for security checks
-        String root = rootDirectory.getPath();
+//        String root = rootDirectory.getPath();
+        String root = "";
+        String indexFileName = "index.html";
+        String rootDirectory = "/";
+
         try {
             OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
             Writer out = new OutputStreamWriter(raw);
@@ -70,8 +74,7 @@ public class RequestProcessor implements Runnable {
                 }
                 File theFile = new File(rootDirectory, fileName.substring(1, fileName.length()));
                 if (theFile.canRead()
-// Don't let clients outside the document root
-                        && theFile.getCanonicalPath().startsWith(root)) {
+                        && theFile.getCanonicalPath().startsWith(root)) { // Don't let clients outside the document root
                     byte[] theData = Files.readAllBytes(theFile.toPath());
                     if (version.startsWith("HTTP/")) { // send a MIME header
                         sendHeader(out, "HTTP/1.0 200 OK", contentType, theData.length);

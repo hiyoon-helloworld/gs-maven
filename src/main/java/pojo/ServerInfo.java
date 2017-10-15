@@ -24,6 +24,13 @@ public class ServerInfo {
         this.hosts = hosts;
     }
 
+    public HostInfo getHostByName(String hostName) {
+        return hosts.stream()
+                .filter(x -> x.getHostName().equals(hostName))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Not Exist HostName"));
+    }
+
     @Override
     public String toString() {
         return "ServerInfo{" +
