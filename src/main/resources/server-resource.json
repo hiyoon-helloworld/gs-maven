@@ -7,7 +7,11 @@
       "index" : "index.html",
       "error403" : "error/nhn-error-403.html",
       "error404" : "error/nhn-error-404.html",
-      "error500" : "error/nhn-error-500.html"
+      "error500" : "error/nhn-error-500.html",
+      "servlet" : [
+        {"Hello": "/Hello"},
+        {"service.Hello": "/Hello"}
+      ]
     },
     {
       "hostName" : "naver",
