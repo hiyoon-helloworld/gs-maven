@@ -1,7 +1,10 @@
 package utils;
 
-import java.io.IOException;
-import java.io.Writer;
+import exception.ServerException;
+
+import java.io.*;
+import java.net.Socket;
+import java.nio.file.Files;
 import java.util.Date;
 
 public class HttpUtils {
@@ -14,5 +17,50 @@ public class HttpUtils {
         out.write("Content-length: " + length + "\r\n");
         out.write("Content-type: " + contentType + "\r\n\r\n");
         out.flush();
+    }
+
+    public static void send(File file, String version, String contentType, Socket connection) {
+        try {
+            if (file.canRead()) {
+                OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
+                Writer writer = new OutputStreamWriter(raw);
+                byte[] theData = Files.readAllBytes(file.toPath());
+                if (version.startsWith("HTTP/")) { // send a MIME header
+                    sendHeader(writer, "HTTP/1.0 200 OK", contentType, theData.length);
+                }
+
+                raw.write(theData);
+                raw.flush();
+            }
+        } catch (IOException ex) {
+            throw new ServerException("Response send error.", ex);
+        }
+    }
+
+    public static void send(String title, String content, String version, String contentType, Socket connection) {
+
+        try {
+            OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
+            Writer out = new OutputStreamWriter(raw);
+            // can't find the file
+            String body = new StringBuilder("<HTML>\r\n")
+                    .append("<HEAD><TITLE>")
+                    .append(title)
+                    .append("</TITLE>\r\n")
+                    .append("</HEAD>\r\n")
+                    .append("<BODY>")
+                    .append("<H1>")
+                    .append(content)
+                    .append("</H1>\r\n")
+                    .append("</BODY></HTML>\r\n")
+                    .toString();
+            if (version.startsWith("HTTP/")) { // send a MIME header
+                sendHeader(out, "HTTP/1.0 404 File Not Found", "text/html; charset=utf-8", body.length());
+            }
+            out.write(body);
+            out.flush();
+        } catch (IOException ex) {
+            throw new ServerException("Response send error.", ex);
+        }
     }
 }

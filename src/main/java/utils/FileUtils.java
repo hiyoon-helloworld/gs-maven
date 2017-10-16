@@ -1,10 +1,21 @@
 package utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 
 public class FileUtils {
 
-    public static String getFileContents(String fileName) throws Exception {
+    private final static Logger logger = LoggerFactory.getLogger(FileUtils.class.getCanonicalName());
+
+    /**
+     * 파일 내용을 반환합니다
+     * @param fileName 파일명
+     * @return 파일 내용
+     * @throws Exception
+     */
+    public static String getFileContents(String fileName) throws FileNotFoundException, IOException {
 
         StringBuilder sb = new StringBuilder();
         File file = new File(fileName);
@@ -17,8 +28,10 @@ public class FileUtils {
                     sb.append(line);
                     line = br.readLine();
                 }
-            } catch (Exception ex) {
-                throw ex;
+            } catch (FileNotFoundException ex) {
+                logger.error(ex.getStackTrace().toString());
+            } catch (IOException ex) {
+                logger.error(ex.getStackTrace().toString());
             } finally {
                 if (br != null) {
                     try {
@@ -28,32 +41,43 @@ public class FileUtils {
                     }
                 }
             }
-
-        }
-        else {
-            throw new IllegalArgumentException("not exist file. fileName: " + fileName);
         }
 
         return sb.toString();
     }
 
+    /**
+     * 해당 경로의 파일을 가져옵니다
+     * @param object 기준 클래스
+     * @param fileName 파일명
+     * @return 파일
+     */
     public static File setResourcesFile(Object object, String fileName) {
         File result = null;
         try {
             result = new File(object.getClass().getClassLoader().getResource(fileName).getFile());
         } catch (NullPointerException ne) {
-            // Ignore...
-            // todo default file??
         }
 
         return result;
     }
 
+    /**
+     * 문자열을 배열로 변경합니다.
+     * @param str 문자
+     * @return 배열
+     */
     public static String[] splitStr(String str) {
         String[] tokens = str.split("\\s+");
         return tokens;
     }
 
+    /**
+     * Socket의 InputStream을 문자열로 반환합니다
+     * @param is InputStream
+     * @return 문자열
+     * @throws IOException Exception
+     */
     public static String getRequestToString(InputStream is) throws IOException {
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -66,11 +90,7 @@ public class FileUtils {
                 sb.append(content).append(" ");
             }
         } catch (IOException ioe) {
-            System.out.println("IO Exception occurred");
-            ioe.printStackTrace();
-        } finally {
-            isr.close();
-            br.close();
+            logger.error(ioe.getStackTrace().toString());
         }
 
         return sb.toString();

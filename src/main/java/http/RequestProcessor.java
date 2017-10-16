@@ -6,40 +6,18 @@ import pojo.*;
 import utils.FileUtils;
 import utils.ServletUtils;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.Socket;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RequestProcessor implements Runnable {
+
     private final static Logger logger = Logger.getLogger(RequestProcessor.class.getCanonicalName());
-//    private File rootDirectory;
-//    private String indexFileName = "index.html";
     private Socket connection;
     private ServerInfo serverInfo;
 
     public RequestProcessor(ServerInfo serverInfo, Socket connection) {
-//        if (rootDirectory.isFile()) {
-//            throw new IllegalArgumentException(
-//                    "rootDirectory must be a directory, not a file");
-//        }
-
-//        String rootPath = this.getClass().getClassLoader().getResource("html/nhn").getPath();
-//        this.rootDirectory = new File(rootPath);
-
-//        try {
-////            rootDirectory = rootDirectory.getCanonicalFile();
-//           String rootPath = this.getClass().getClassLoader().getResource("/html/nhn").getPath();
-//            rootDirectory = new File(rootPath);
-//        } catch (IOException ex) {
-//        }
-//        this.rootDirectory = rootDirectory;
-//        if (indexFileName != null)
-//            this.indexFileName = indexFileName;
-
         this.serverInfo = serverInfo;
         this.connection = connection;
     }
@@ -48,13 +26,17 @@ public class RequestProcessor implements Runnable {
     public void run() {
         HostInfo hostInfo = null;
         try {
+            // request 정보를 설정합니다
             String[] tokens = FileUtils.splitStr(FileUtils.getRequestToString(connection.getInputStream()));
-            HttpInfo httpInfo = new HttpInfo(tokens, this.serverInfo.getHosts());
-            HttpRequest request = new HttpRequest(httpInfo);
-            HttpResponse response = new HttpResponse(this.connection, httpInfo);
+            HttpInfo httpInfo = new HttpInfo(tokens, this.serverInfo);
             hostInfo = httpInfo.getHostInfo();
+
+            // 해당 servlet을 찾아 요청을 보냅니다
+            HttpRequest request = new HttpRequest(httpInfo);
+            HttpResponse response = new HttpResponse(connection, httpInfo);
             SimpleServlet simpleServlet = (SimpleServlet)ServletUtils.getServletByPackage(httpInfo.getMapping()).newInstance();
             simpleServlet.service(request, response);
+
         } catch (IllegalAccessException ex) {
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
         } catch (InstantiationException ex) {

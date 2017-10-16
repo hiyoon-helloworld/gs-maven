@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class JsonUtilsTest {
 
-    private static Logger logger = LoggerFactory.getLogger(JsonUtilsTest.class);
+    private final static Logger logger = LoggerFactory.getLogger(JsonUtilsTest.class.getCanonicalName());
 
     @Test
     public void getResources() {

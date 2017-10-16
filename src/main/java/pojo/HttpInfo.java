@@ -1,43 +1,59 @@
 package pojo;
 
-import java.net.URLConnection;
-import java.util.List;
+import exception.ClientException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class HttpInfo {
+
+    private final static Logger logger = LoggerFactory.getLogger(HttpInfo.class.getCanonicalName());
 
     private String method;
     private String mapping;
     private String version;
     private String host;
-    private String contentType;
+    private String contentType = "text/html";
     private HostInfo hostInfo;
 
-    public HttpInfo(String[] tokens, List<HostInfo> phostInfos) {
-        this.method = tokens.length > 0 ? tokens[0] : "";
-        this.mapping = tokens.length > 1 ? tokens[1] : "";
-        this.version = tokens.length > 2 ? tokens[2] : "";
-        for (int i = 0, cnt = tokens.length; i < cnt; i++) {
-            String token = tokens[i].toLowerCase();
-            if (token.contains("host") && i + 1 < cnt) {
-                host = tokens[i + 1];
-            }
-            else if (token.contains("content-type") && i + 1 < cnt) {
-                contentType = tokens[i + 1];
-            }
-        }
+    public HttpInfo(String[] tokens, ServerInfo serverInfo) {
+        try {
+            // method
+            this.method = tokens.length > 0 ? tokens[0] : "";
 
-        if (this.host == null || this.host.length() < 1) {
-            this.hostInfo = phostInfos.get(0);
-        }
-        if (this.contentType == null || this.contentType.length() < 1) {
-            this.contentType = URLConnection.getFileNameMap().getContentTypeFor(this.contentType);
-        }
+            // mapping
+            this.mapping = serverInfo.getServlets()
+                    .stream()
+                    .filter(x -> x.containsKey(tokens[1]))
+                    .map(x -> x.get(tokens[1])).findFirst().get();
 
-        this.hostInfo = phostInfos
-                .stream()
-                .filter(x -> x.getHostName().toLowerCase().contains(this.host))
-                .findFirst()
-                .orElse(phostInfos.get(0));
+            // version
+            this.version = tokens.length > 2 ? tokens[2] : "";
+            for (int i = 0, cnt = tokens.length; i < cnt; i++) {
+                String token = tokens[i].toLowerCase();
+                if (token.contains("Host:") && i + 1 < cnt) {
+                    host = tokens[i + 1];
+                } else if (token.contains("content-type") && i + 1 < cnt) {
+                    contentType = tokens[i + 1];
+                }
+            }
+
+            // host
+            if (this.host == null || this.host.length() < 1) {
+                this.hostInfo = serverInfo.getHosts().get(0);
+            }
+            else {
+                this.hostInfo = serverInfo.getHosts()
+                        .stream()
+                        .filter(x -> x.getHostName().toLowerCase().contains(this.host))
+                        .findFirst()
+                        .orElse(serverInfo.getHosts().get(0));
+            }
+        } catch (Exception ex) {
+            throw new ClientException(404, "tokens: " + Arrays.stream(tokens).collect(Collectors.joining(", ")), ex);
+        }
     }
 
     public String getMethod() {

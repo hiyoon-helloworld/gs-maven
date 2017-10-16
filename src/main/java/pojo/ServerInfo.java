@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ServerInfo {
+
     private int port;
     private List<HostInfo> hosts;
     private List<Map<String, String>> servlets;

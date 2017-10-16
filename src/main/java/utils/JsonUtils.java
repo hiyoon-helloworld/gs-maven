@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class JsonUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(JsonUtils.class);
+    private final static Logger logger = LoggerFactory.getLogger(JsonUtils.class.getCanonicalName());
 
     public static ServerInfo getJsonToServerInfo(ResourceFileType type) throws IOException, Exception {
 

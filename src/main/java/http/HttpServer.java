@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
 
 public class HttpServer {
 
-    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class);
+    private static final Logger logger = LoggerFactory.getLogger(HttpServer.class.getCanonicalName());
     private static final int NUM_THREADS = 50;
     private static ServerInfo serverInfo;
 

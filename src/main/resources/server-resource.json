@@ -2,7 +2,7 @@
   "port" : 9090,
   "hosts" : [
     {
-      "hostName" : "nhn",
+      "hostName" : "www.nhn.com",
       "rootDir" : "html/nhn/",
       "index" : "index.html",
       "error403" : "error/nhn-error-403.html",
@@ -10,7 +10,7 @@
       "error500" : "error/nhn-error-500.html"
     },
     {
-      "hostName" : "naver",
+      "hostName" : "www.naver.com",
       "rootDir" : "html/naver/",
       "index" : "index.html",
       "error403" : "error/naver-error-403.html",
@@ -19,7 +19,8 @@
     }
   ],
   "servlets" : [
-    {"Hello": "/Hello"},
-    {"service.Hello": "/service.Hello"}
+    {"/Greeting": "Hello"},
+    {"/super.Greeting": "service.Hello"},
+    {"/server.Now": "service.DateNow"}
   ]
 }

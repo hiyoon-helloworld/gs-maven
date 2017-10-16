@@ -7,15 +7,14 @@ import org.slf4j.LoggerFactory;
 
 public class ServletUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(ServletUtils.class);
+    private final static Logger logger = LoggerFactory.getLogger(ServletUtils.class.getCanonicalName());
 
     public static Class getServletByPackage(String packageName) throws ClientException {
         try {
-            Class<SimpleServlet> simpleServletClass = (Class<SimpleServlet>) Class.forName("service.Hello");
+            Class<SimpleServlet> simpleServletClass = (Class<SimpleServlet>) Class.forName(packageName.replace("/", ""));
             return simpleServletClass;
-        } catch (ClassNotFoundException e) {
-            logger.error("Class not founed. packageName: {}, error: {}", packageName, e);
-            throw new ClientException(404, e.getStackTrace().toString());
+        } catch (ClassNotFoundException ex) {
+            throw new ClientException(404, "packageName not founded: " + packageName, ex);
         }
     }
 
