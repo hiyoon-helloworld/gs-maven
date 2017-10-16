@@ -1,8 +1,6 @@
 package utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 
 public class FileUtils {
 
@@ -49,6 +47,33 @@ public class FileUtils {
         }
 
         return result;
+    }
+
+    public static String[] splitStr(String str) {
+        String[] tokens = str.split("\\s+");
+        return tokens;
+    }
+
+    public static String getRequestToString(InputStream is) throws IOException {
+        InputStreamReader isr = null;
+        BufferedReader br = null;
+        StringBuilder sb = new StringBuilder();
+        String content;
+        try {
+            isr = new InputStreamReader(is);
+            br = new BufferedReader(isr);
+            while ((content = br.readLine()) != null && content.length() > 0) {
+                sb.append(content).append(" ");
+            }
+        } catch (IOException ioe) {
+            System.out.println("IO Exception occurred");
+            ioe.printStackTrace();
+        } finally {
+            isr.close();
+            br.close();
+        }
+
+        return sb.toString();
     }
 
 }

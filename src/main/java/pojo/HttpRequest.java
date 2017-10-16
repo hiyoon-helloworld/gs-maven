@@ -1,13 +1,13 @@
 package pojo;
 
 public class HttpRequest {
-    private HostInfo hostInfo;
+    private HttpInfo httpInfo;
 
-    public HttpRequest(HostInfo phostInfo) {
-        this.hostInfo = phostInfo;
+    public HttpRequest(HttpInfo httpInfo) {
+        this.httpInfo = httpInfo;
     }
 
-    public HostInfo getHostInfo() {
-        return hostInfo;
+    public HttpInfo getHttpInfo() {
+        return httpInfo;
     }
 }

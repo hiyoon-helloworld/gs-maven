@@ -1,6 +1,10 @@
 package http;
 
-import pojo.ServerInfo;
+import exception.ClientException;
+import exception.ServerException;
+import pojo.*;
+import utils.FileUtils;
+import utils.ServletUtils;
 
 import java.io.*;
 import java.net.Socket;
@@ -42,6 +46,36 @@ public class RequestProcessor implements Runnable {
 
     @Override
     public void run() {
+        HostInfo hostInfo = null;
+        try {
+            String[] tokens = FileUtils.splitStr(FileUtils.getRequestToString(connection.getInputStream()));
+            HttpInfo httpInfo = new HttpInfo(tokens, this.serverInfo.getHosts());
+            HttpRequest request = new HttpRequest(httpInfo);
+            HttpResponse response = new HttpResponse(this.connection, httpInfo);
+            hostInfo = httpInfo.getHostInfo();
+            SimpleServlet simpleServlet = (SimpleServlet)ServletUtils.getServletByPackage(httpInfo.getMapping()).newInstance();
+            simpleServlet.service(request, response);
+        } catch (IllegalAccessException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+        } catch (InstantiationException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+        } catch (IOException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+        } catch (ServerException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+        } catch (ClientException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+        } finally {
+            try {
+                connection.close();
+            } catch (IOException ex) {
+            }
+        }
+    }
+
+    /*
+    @Override
+    public void run() {
         // for security checks
 //        String root = rootDirectory.getPath();
         String root = "";
@@ -52,14 +86,27 @@ public class RequestProcessor implements Runnable {
             OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
             Writer out = new OutputStreamWriter(raw);
             Reader in = new InputStreamReader(new BufferedInputStream(connection.getInputStream()), "UTF-8");
-            StringBuilder requestLine = new StringBuilder();
-            while (true) {
-                int c = in.read();
-                if (c == '\r' || c == '\n')
-                    break;
-                requestLine.append((char) c);
-            }
-            String get = requestLine.toString();
+            String get = FileUtils.getRequestToString(connection.getInputStream());
+            System.out.println(get);
+
+
+//            int cnt = 0;
+//            while (true) {
+//                int c = in.read();
+//                if (c == '\r' || c == '\n') {
+//                    cnt++;
+//                }
+//                else if (c < -1) {
+//                    in.close();
+//                    break;
+//                }
+//
+//                requestLine.append((char) c);
+//                System.out.println(requestLine);
+//            }
+
+
+//            String get = requestLine.toString();
             logger.info(connection.getRemoteSocketAddress() + " " + get);
             String[] tokens = get.split("\\s+");
             String method = tokens[0];
@@ -121,15 +168,16 @@ public class RequestProcessor implements Runnable {
             }
         }
     }
+    */
 
-    private void sendHeader(Writer out, String responseCode, String contentType, int length)
-            throws IOException {
-        out.write(responseCode + "\r\n");
-        Date now = new Date();
-        out.write("Date: " + now + "\r\n");
-        out.write("Server: JHTTP 2.0\r\n");
-        out.write("Content-length: " + length + "\r\n");
-        out.write("Content-type: " + contentType + "\r\n\r\n");
-        out.flush();
-    }
+//    private void sendHeader(Writer out, String responseCode, String contentType, int length)
+//            throws IOException {
+//        out.write(responseCode + "\r\n");
+//        Date now = new Date();
+//        out.write("Date: " + now + "\r\n");
+//        out.write("Server: JHTTP 2.0\r\n");
+//        out.write("Content-length: " + length + "\r\n");
+//        out.write("Content-type: " + contentType + "\r\n\r\n");
+//        out.flush();
+//    }
 }

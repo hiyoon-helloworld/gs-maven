@@ -13,7 +13,7 @@ public class JsonUtils {
 
     private static Logger logger = LoggerFactory.getLogger(JsonUtils.class);
 
-    public static ServerInfo getJsonToMap(ResourceFileType type) throws IOException, Exception {
+    public static ServerInfo getJsonToServerInfo(ResourceFileType type) throws IOException, Exception {
 
         ServerInfo result = null;
         String content = FileUtils.getFileContents(type.getValue());

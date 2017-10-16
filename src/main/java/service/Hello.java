@@ -1,8 +1,8 @@
 package service;
 
-import com.sun.deploy.net.HttpRequest;
-import com.sun.deploy.net.HttpResponse;
 import http.SimpleServlet;
+import pojo.HttpRequest;
+import pojo.HttpResponse;
 
 public class Hello implements SimpleServlet {
     @Override

@@ -1,15 +1,11 @@
 package exception;
 
-import java.io.File;
-
-public class ServerException extends Exception {
+public class ServerException extends RuntimeException {
 
     private String message;
-    private File errorFile;
 
-    public ServerException(final String message, final File errorFile) {
+    public ServerException(final String message) {
         this.message = message;
-        this.errorFile = errorFile;
     }
 
 }

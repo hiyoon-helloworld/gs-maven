@@ -1,7 +1,7 @@
 package http;
 
-import com.sun.deploy.net.HttpRequest;
-import com.sun.deploy.net.HttpResponse;
+import pojo.HttpRequest;
+import pojo.HttpResponse;
 
 public interface SimpleServlet {
 

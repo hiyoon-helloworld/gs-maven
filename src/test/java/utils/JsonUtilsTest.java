@@ -17,7 +17,7 @@ public class JsonUtilsTest {
     @Test
     public void getResources() {
         try {
-            ServerInfo serverInfo = JsonUtils.getJsonToMap(ResourceFileType.SERVER);
+            ServerInfo serverInfo = JsonUtils.getJsonToServerInfo(ResourceFileType.SERVER);
             Assert.assertEquals(serverInfo.getPort(), 9090);
             Assert.assertNotNull(serverInfo.getHosts());
         } catch (IOException ioe) {

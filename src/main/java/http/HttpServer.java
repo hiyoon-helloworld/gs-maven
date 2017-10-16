@@ -22,7 +22,7 @@ public class HttpServer {
         logger.info("The Http Server Init...");
         try {
             // 서버 정보를 설정합니다
-            serverInfo = JsonUtils.getJsonToMap(ResourceFileType.SERVER);
+            serverInfo = JsonUtils.getJsonToServerInfo(ResourceFileType.SERVER);
             logger.info(serverInfo.toString());
 
             // 서버를 시작합니다

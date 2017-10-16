@@ -1,13 +1,11 @@
 package exception;
 
-import java.io.File;
-
-public class ClientException extends Exception {
+public class ClientException extends RuntimeException {
+    private int code;
     private String message;
-    private File errorFile;
 
-    public ClientException(final String message, final File errorFile) {
-        this.message = message;
-        this.errorFile = errorFile;
+    public ClientException(final int pcode, final String pmessage) {
+        this.code = pcode;
+        this.message = pmessage;
     }
 }
