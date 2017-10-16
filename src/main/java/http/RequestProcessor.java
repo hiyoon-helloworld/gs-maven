@@ -4,6 +4,7 @@ import exception.ClientException;
 import exception.ServerException;
 import pojo.*;
 import utils.FileUtils;
+import utils.HttpUtils;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -24,12 +25,11 @@ public class RequestProcessor implements Runnable {
 
     @Override
     public void run() {
-        HostInfo hostInfo = null;
+        HttpInfo httpInfo = null;
         try {
             // request 정보를 설정합니다
             String[] tokens = FileUtils.splitStr(FileUtils.getRequestToString(connection.getInputStream()));
-            HttpInfo httpInfo = new HttpInfo(tokens, this.serverInfo);
-            hostInfo = httpInfo.getHostInfo();
+            httpInfo = new HttpInfo(tokens, this.serverInfo);
 
             // 해당 servlet을 찾아 요청을 보냅니다
             HttpRequest request = new HttpRequest(httpInfo);
@@ -37,16 +37,24 @@ public class RequestProcessor implements Runnable {
             SimpleServlet simpleServlet = (SimpleServlet)ServletUtils.getServletByPackage(httpInfo.getMapping()).newInstance();
             simpleServlet.service(request, response);
 
-        } catch (IllegalAccessException ex) {
-            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
-        } catch (InstantiationException ex) {
-            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
-        } catch (ServerException ex) {
-            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
         } catch (ClientException ex) {
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+            HttpUtils.send((ex.getCode() == 403 ? httpInfo.getHostInfo().getError403File() : httpInfo.getHostInfo().getError404File()),
+                    httpInfo.getVersion(),
+                    httpInfo.getContentType(),
+                    connection);
+        } catch (ServerException ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+            HttpUtils.send(httpInfo.getHostInfo().getError500File(),
+                    httpInfo.getVersion(),
+                    httpInfo.getContentType(),
+                    connection);
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
+            HttpUtils.send(httpInfo.getHostInfo().getError500File(),
+                    httpInfo.getVersion(),
+                    httpInfo.getContentType(),
+                    connection);
         } finally {
             try {
                 connection.close();

@@ -5,17 +5,17 @@
       "hostName" : "www.nhn.com",
       "rootDir" : "html/nhn/",
       "index" : "index.html",
-      "error403" : "error/nhn-error-403.html",
-      "error404" : "error/nhn-error-404.html",
-      "error500" : "error/nhn-error-500.html"
+      "error403" : "error/403.html",
+      "error404" : "error/404.html",
+      "error500" : "error/500.html"
     },
     {
       "hostName" : "www.naver.com",
       "rootDir" : "html/naver/",
       "index" : "index.html",
-      "error403" : "error/naver-error-403.html",
-      "error404" : "error/naver-error-404.html",
-      "error500" : "error/naver-error-500.html"
+      "error403" : "error/403.html",
+      "error404" : "error/404.html",
+      "error500" : "error/500.html"
     }
   ],
   "servlets" : [

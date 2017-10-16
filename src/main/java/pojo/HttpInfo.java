@@ -23,12 +23,6 @@ public class HttpInfo {
             // method
             this.method = tokens.length > 0 ? tokens[0] : "";
 
-            // mapping
-            this.mapping = serverInfo.getServlets()
-                    .stream()
-                    .filter(x -> x.containsKey(tokens[1]))
-                    .map(x -> x.get(tokens[1])).findFirst().get();
-
             // version
             this.version = tokens.length > 2 ? tokens[2] : "";
             for (int i = 0, cnt = tokens.length; i < cnt; i++) {
@@ -51,6 +45,15 @@ public class HttpInfo {
                         .findFirst()
                         .orElse(serverInfo.getHosts().get(0));
             }
+
+            // mapping
+            this.mapping = serverInfo.getServlets()
+                    .stream()
+                    .filter(x -> x.containsKey(tokens[1]))
+                    .map(x -> x.get(tokens[1]))
+                    .findFirst()
+                    .orElse("");
+
         } catch (Exception ex) {
             throw new ClientException(404, "tokens: " + Arrays.stream(tokens).collect(Collectors.joining(", ")), ex);
         }

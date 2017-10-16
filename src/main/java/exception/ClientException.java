@@ -11,4 +11,13 @@ public class ClientException extends RuntimeException {
         this.message = pmessage;
         this.stackTrace = ex.getStackTrace().toString();
     }
+
+    public int getCode() {
+        return code;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }
