@@ -37,19 +37,19 @@ public class RequestProcessor implements Runnable {
             SimpleServlet simpleServlet = (SimpleServlet)ServletUtils.getServletByPackage(httpInfo.getMapping()).newInstance();
             simpleServlet.service(request, response);
 
-        } catch (ClientException ex) {
+        } catch (ClientException ex) { // Client Exception
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
             HttpUtils.send((ex.getCode() == 403 ? httpInfo.getHostInfo().getError403File() : httpInfo.getHostInfo().getError404File()),
                     httpInfo.getVersion(),
                     httpInfo.getContentType(),
                     connection);
-        } catch (ServerException ex) {
+        } catch (ServerException ex) { // Server Exception
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
             HttpUtils.send(httpInfo.getHostInfo().getError500File(),
                     httpInfo.getVersion(),
                     httpInfo.getContentType(),
                     connection);
-        } catch (Exception ex) {
+        } catch (Exception ex) { // Server Exception
             logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
             HttpUtils.send(httpInfo.getHostInfo().getError500File(),
                     httpInfo.getVersion(),
@@ -62,112 +62,4 @@ public class RequestProcessor implements Runnable {
             }
         }
     }
-
-    /*
-    @Override
-    public void run() {
-        // for security checks
-//        String root = rootDirectory.getPath();
-        String root = "";
-        String indexFileName = "index.html";
-        String rootDirectory = "/";
-
-        try {
-            OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
-            Writer out = new OutputStreamWriter(raw);
-            Reader in = new InputStreamReader(new BufferedInputStream(connection.getInputStream()), "UTF-8");
-            String get = FileUtils.getRequestToString(connection.getInputStream());
-            System.out.println(get);
-
-
-//            int cnt = 0;
-//            while (true) {
-//                int c = in.read();
-//                if (c == '\r' || c == '\n') {
-//                    cnt++;
-//                }
-//                else if (c < -1) {
-//                    in.close();
-//                    break;
-//                }
-//
-//                requestLine.append((char) c);
-//                System.out.println(requestLine);
-//            }
-
-
-//            String get = requestLine.toString();
-            logger.info(connection.getRemoteSocketAddress() + " " + get);
-            String[] tokens = get.split("\\s+");
-            String method = tokens[0];
-            String version = "";
-            if (method.equals("GET")) {
-                String fileName = tokens[1];
-                if (fileName.endsWith("/")) fileName += indexFileName;
-                String contentType =
-                        URLConnection.getFileNameMap().getContentTypeFor(fileName);
-                if (tokens.length > 2) {
-                    version = tokens[2];
-                }
-                File theFile = new File(rootDirectory, fileName.substring(1, fileName.length()));
-                if (theFile.canRead()
-                        && theFile.getCanonicalPath().startsWith(root)) { // Don't let clients outside the document root
-                    byte[] theData = Files.readAllBytes(theFile.toPath());
-                    if (version.startsWith("HTTP/")) { // send a MIME header
-                        sendHeader(out, "HTTP/1.0 200 OK", contentType, theData.length);
-                    }
-                    // send the file; it may be an image or other binary data
-                    // so use the underlying output stream
-                    // instead of the writer
-                    raw.write(theData);
-                    raw.flush();
-                } else {
-                    // can't find the file
-                    String body = new StringBuilder("<HTML>\r\n")
-                            .append("<HEAD><TITLE>File Not Found</TITLE>\r\n")
-                            .append("</HEAD>\r\n")
-                            .append("<BODY>")
-                            .append("<H1>HTTP Error 404: File Not Found</H1>\r\n")
-                            .append("</BODY></HTML>\r\n")
-                            .toString();
-                    if (version.startsWith("HTTP/")) { // send a MIME header
-                        sendHeader(out, "HTTP/1.0 404 File Not Found", "text/html; charset=utf-8", body.length());
-                    }
-                    out.write(body);
-                    out.flush();
-                }
-            } else {
-                // method does not equal "GET"
-                String body = new StringBuilder("<HTML>\r\n").append("<HEAD><TITLE>Not Implemented</TITLE>\r\n").append("</HEAD>\r\n")
-                        .append("<BODY>")
-                        .append("<H1>HTTP Error 501: Not Implemented</H1>\r\n")
-                        .append("</BODY></HTML>\r\n").toString();
-                if (version.startsWith("HTTP/")) { // send a MIME header
-                    sendHeader(out, "HTTP/1.0 501 Not Implemented",
-                            "text/html; charset=utf-8", body.length());
-                }
-                out.write(body);
-                out.flush();
-            }
-        } catch (IOException ex) {
-            logger.log(Level.WARNING, "Error talking to " + connection.getRemoteSocketAddress(), ex);
-        } finally {
-            try {
-                connection.close();
-            } catch (IOException ex) {
-            }
-        }
-    }
-    */
-
-//    private void sendHeader(Writer out, String responseCode, String contentType, int length)
-//            throws IOException {
-//        out.write(responseCode + "\r\n");
-//        Date now = new Date();
-//        out.write("Date: " + now + "\r\n");
-//        out.write("Server: JHTTP 2.0\r\n");
-//        out.write("Content-length: " + length + "\r\n");
-//        out.write("Content-type: " + contentType + "\r\n\r\n");
-//        out.flush();
-//    }
 }

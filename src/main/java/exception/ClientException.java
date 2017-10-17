@@ -1,6 +1,7 @@
 package exception;
 
 public class ClientException extends RuntimeException {
+
     private int code;
     private String message;
     private String stackTrace;

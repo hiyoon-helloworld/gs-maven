@@ -10,4 +10,11 @@ public class HttpRequest {
     public HttpInfo getHttpInfo() {
         return httpInfo;
     }
+
+    @Override
+    public String toString() {
+        return "HttpRequest{" +
+                "httpInfo=" + httpInfo.toString() +
+                '}';
+    }
 }

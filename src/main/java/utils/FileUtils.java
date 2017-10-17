@@ -15,7 +15,7 @@ public class FileUtils {
      * @return 파일 내용
      * @throws Exception
      */
-    public static String getFileContents(String fileName) throws FileNotFoundException, IOException {
+    public static String getFileContents(String fileName) throws IOException {
 
         StringBuilder sb = new StringBuilder();
         File file = new File(fileName);

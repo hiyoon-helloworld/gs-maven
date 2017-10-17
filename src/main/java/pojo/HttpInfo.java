@@ -82,4 +82,16 @@ public class HttpInfo {
     public HostInfo getHostInfo() {
         return hostInfo;
     }
+
+    @Override
+    public String toString() {
+        return "HttpInfo{" +
+                "method='" + method + '\'' +
+                ", mapping='" + mapping + '\'' +
+                ", version='" + version + '\'' +
+                ", host='" + host + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", hostInfo=" + hostInfo.toString() +
+                '}';
+    }
 }

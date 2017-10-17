@@ -21,4 +21,11 @@ public class HttpResponse {
     public void send(String title, String content) {
         HttpUtils.send(title, content, httpInfo.getVersion(), httpInfo.getContentType(), this.connection);
     }
+
+    @Override
+    public String toString() {
+        return "HttpResponse{" +
+                "httpInfo=" + httpInfo.toString() +
+                '}';
+    }
 }

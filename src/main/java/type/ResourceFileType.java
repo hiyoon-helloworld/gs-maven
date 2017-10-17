@@ -1,9 +1,10 @@
 package type;
 
-import java.io.File;
-
 public enum ResourceFileType {
 
+    /**
+     * 필요한 설정 값의 타입과 위치를 관리합니다.
+     */
     SERVER(0);
 
     private int value;

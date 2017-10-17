@@ -11,6 +11,11 @@ public class DateNow implements SimpleServlet {
 
     private final static Logger logger = LoggerFactory.getLogger(Hello.class.getCanonicalName());
 
+    /**
+     * 날짜및 시간을 반환합니다.
+     * @param httpRequest HttpRequest
+     * @param httpResponse HttpResponse
+     */
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.info("Called service.Http Servlet");

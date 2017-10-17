@@ -10,6 +10,11 @@ public class Hello implements SimpleServlet {
 
     private final static Logger logger = LoggerFactory.getLogger(Hello.class.getCanonicalName());
 
+    /**
+     * 해당 html를 반환합니다.
+     * @param httpRequest HttpRequest
+     * @param httpResponse HttpResponse
+     */
     @Override
     public void service(HttpRequest httpRequest, HttpResponse httpResponse) {
         logger.info("Called service.Http Servlet");
