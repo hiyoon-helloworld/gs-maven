@@ -20,6 +20,7 @@ public class JsonUtils {
     public static ServerInfo getJsonToServerInfo(ResourceFileType type) throws Exception {
 
         ServerInfo result = null;
+        logger.info("Json Content. type: {}", type.getValue());
         String content = FileUtils.getFileContents(type.getValue());
         logger.info("Json Content. contnet: {}", content);
         if (content != null && content.length() > 0) {

@@ -17,6 +17,7 @@ public class FileUtils {
      */
     public static String getFileContents(String fileName) throws IOException {
 
+        logger.info("FileName: {}", fileName);
         StringBuilder sb = new StringBuilder();
         File file = new File(fileName);
         if (file.isFile()) {
