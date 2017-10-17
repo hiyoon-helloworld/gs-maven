@@ -1,5 +1,10 @@
 package type;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Scanner;
+
 public enum ResourceFileType {
 
     /**
@@ -9,7 +14,7 @@ public enum ResourceFileType {
 
     private int value;
     private static String[] arrFile = {"server-resource.json"};
-
+    private final static Logger logger = LoggerFactory.getLogger(ResourceFileType.class.getCanonicalName());
     ResourceFileType(int pvalue) {
         this.value = pvalue;
     }
@@ -25,7 +30,7 @@ public enum ResourceFileType {
             throw new IllegalArgumentException("Not Found Resource File Type");
         }
         else {
-            return this.getClass().getClassLoader().getResource(fileName).getFile();
+            return fileName;
         }
     }
 

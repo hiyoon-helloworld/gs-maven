@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.util.Scanner;
 
 public class FileUtils {
 
@@ -45,6 +46,11 @@ public class FileUtils {
         }
 
         return sb.toString();
+    }
+
+    public static String getFileContentAsStream(String fileName) throws IOException {
+        FileUtils fileUtils = new FileUtils();
+        return new Scanner(fileUtils.getClass().getClassLoader().getResourceAsStream(fileName), "UTF-8").useDelimiter("\\A").next();
     }
 
     /**

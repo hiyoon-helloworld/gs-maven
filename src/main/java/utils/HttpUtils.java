@@ -1,6 +1,8 @@
 package utils;
 
 import exception.ServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.Socket;
@@ -8,6 +10,8 @@ import java.nio.file.Files;
 import java.util.Date;
 
 public class HttpUtils {
+
+    private final static Logger logger = LoggerFactory.getLogger(HttpUtils.class.getCanonicalName());
 
     /**
      * Heder를 설정합니다.
@@ -45,9 +49,35 @@ public class HttpUtils {
                     sendHeader(writer, "HTTP/1.0 200 OK", contentType, theData.length);
                 }
 
+                logger.info("response: {}", new String(theData));
+
                 raw.write(theData);
                 raw.flush();
+            } else {
+                logger.warn("file cannot Read.");
             }
+        } catch (IOException ex) {
+            throw new ServerException("Response send error.", ex);
+        }
+    }
+
+    /**
+     * 해당 Html 문자열을 만들어 반환합니다.
+     * @param html html
+     * @param version Version
+     * @param contentType Content-Type
+     * @param connection Connection
+     */
+    public static void send(String html, String version, String contentType, Socket connection) {
+
+        try {
+            OutputStream raw = new BufferedOutputStream(connection.getOutputStream());
+            Writer out = new OutputStreamWriter(raw);
+            if (version.startsWith("HTTP/")) { // send a MIME header
+                sendHeader(out, "HTTP/1.0 404 File Not Found", "text/html; charset=utf-8", html.length());
+            }
+            out.write(html);
+            out.flush();
         } catch (IOException ex) {
             throw new ServerException("Response send error.", ex);
         }
