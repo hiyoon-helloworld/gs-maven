@@ -10,7 +10,7 @@ public class ClientException extends RuntimeException {
         super(ex);
         this.code = pcode;
         this.message = pmessage;
-        this.stackTrace = ex.getStackTrace().toString();
+        this.stackTrace = ex != null ? ex.getStackTrace().toString() : "";
     }
 
     public int getCode() {

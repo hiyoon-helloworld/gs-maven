@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class HttpServer {
+public class HttpServer extends Thread {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpServer.class.getCanonicalName());
     private static final int NUM_THREADS = 50;
@@ -36,7 +36,7 @@ public class HttpServer {
     public HttpServer() throws IOException {
     }
 
-    public void start() throws IOException {
+    public void run() {
         ExecutorService pool = Executors.newFixedThreadPool(NUM_THREADS);
         try (ServerSocket server = new ServerSocket(serverInfo.getPort())) {
             logger.info("Accepting connections on port " + server.getLocalPort());
@@ -49,6 +49,8 @@ public class HttpServer {
                     logger.error("Error accepting connection", ex);
                 }
             }
+        } catch (IOException ioe) {
+            logger.error(ioe.getStackTrace().toString());
         }
     }
 }

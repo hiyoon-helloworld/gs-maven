@@ -5,6 +5,7 @@ import exception.ServerException;
 import pojo.*;
 import utils.FileUtils;
 import utils.HttpUtils;
+import utils.SecurityUtils;
 import utils.ServletUtils;
 
 import java.io.IOException;
@@ -30,6 +31,9 @@ public class RequestProcessor implements Runnable {
             // request 정보를 설정합니다
             String[] tokens = FileUtils.splitStr(FileUtils.getRequestToString(connection.getInputStream()));
             httpInfo = new HttpInfo(tokens, this.serverInfo);
+
+            // security check
+            SecurityUtils.checkPath(tokens[1]);
 
             // 해당 servlet을 찾아 요청을 보냅니다
             HttpRequest request = new HttpRequest(httpInfo);

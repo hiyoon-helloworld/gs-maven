@@ -8,6 +8,15 @@ import java.nio.file.Files;
 import java.util.Date;
 
 public class HttpUtils {
+
+    /**
+     * Heder를 설정합니다.
+     * @param out Writer
+     * @param responseCode Response Code
+     * @param contentType Content-Type
+     * @param length Length
+     * @throws IOException IOException
+     */
     public static void sendHeader(Writer out, String responseCode, String contentType, int length)
             throws IOException {
         out.write(responseCode + "\r\n");
@@ -19,6 +28,13 @@ public class HttpUtils {
         out.flush();
     }
 
+    /**
+     * 파일내용을 읽어 반환합니다.
+     * @param file File
+     * @param version Version
+     * @param contentType Content-Type
+     * @param connection Connection
+     */
     public static void send(File file, String version, String contentType, Socket connection) {
         try {
             if (file.canRead()) {
@@ -37,6 +53,14 @@ public class HttpUtils {
         }
     }
 
+    /**
+     * 해당 Title, Content를 Html형식으로 만들어 반환합니다.
+     * @param title title
+     * @param content content
+     * @param version Version
+     * @param contentType Content-Type
+     * @param connection Connection
+     */
     public static void send(String title, String content, String version, String contentType, Socket connection) {
 
         try {

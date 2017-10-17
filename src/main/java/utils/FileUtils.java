@@ -88,9 +88,12 @@ public class FileUtils {
             br = new BufferedReader(isr);
             while ((content = br.readLine()) != null && content.length() > 0) {
                 sb.append(content).append(" ");
+                logger.info("#####################" + sb.toString());
             }
         } catch (IOException ioe) {
             logger.error(ioe.getStackTrace().toString());
+        } catch (Exception ex) {
+            logger.error(ex.getStackTrace().toString());
         }
 
         return sb.toString();

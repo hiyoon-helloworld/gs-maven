@@ -27,7 +27,7 @@ public class HttpInfo {
             this.version = tokens.length > 2 ? tokens[2] : "";
             for (int i = 0, cnt = tokens.length; i < cnt; i++) {
                 String token = tokens[i].toLowerCase();
-                if (token.contains("Host:") && i + 1 < cnt) {
+                if (token.contains("host:") && i + 1 < cnt) {
                     host = tokens[i + 1];
                 } else if (token.contains("content-type") && i + 1 < cnt) {
                     contentType = tokens[i + 1];

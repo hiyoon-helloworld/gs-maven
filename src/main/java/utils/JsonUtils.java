@@ -7,13 +7,17 @@ import org.slf4j.LoggerFactory;
 import pojo.ServerInfo;
 import type.ResourceFileType;
 
-import java.io.IOException;
-
 public class JsonUtils {
 
     private final static Logger logger = LoggerFactory.getLogger(JsonUtils.class.getCanonicalName());
 
-    public static ServerInfo getJsonToServerInfo(ResourceFileType type) throws IOException, Exception {
+    /**
+     * 설정 파일을 읽어 해당 클래스에 매핑합니다.
+     * @param type 설정파일 타입
+     * @return 설정 정보 클래스
+     * @throws Exception Exception
+     */
+    public static ServerInfo getJsonToServerInfo(ResourceFileType type) throws Exception {
 
         ServerInfo result = null;
         String content = FileUtils.getFileContents(type.getValue());

@@ -8,7 +8,7 @@ public class ServerException extends RuntimeException {
     public ServerException(final String message, final Exception ex) {
         super(ex);
         this.message = message;
-        this.stackTrace = ex.getStackTrace().toString();
+        this.stackTrace = ex != null ? ex.getStackTrace().toString() : "";
     }
 
 }
